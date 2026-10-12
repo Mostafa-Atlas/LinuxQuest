@@ -11,3 +11,8 @@ Module `linuxquest`, Go 1.22.
 The game runs on an in-memory filesystem. Every path is normalised lexically
 against a virtual root, so `..` at `/` stays at `/`. NUL bytes and over-long
 paths are rejected.
+
+## Input
+
+Unquoted `; & | < >` and backticks are rejected rather than interpreted. There
+is no variable expansion, globbing, or substitution.
