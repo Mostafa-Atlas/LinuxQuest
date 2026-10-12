@@ -67,7 +67,7 @@ func Clean(p string) string {
 // path. Relative paths are resolved against cwd; "~" and "~/x" against home.
 // The result is always inside the virtual filesystem.
 func (f *FS) Resolve(cwd, p string) (string, error) {
-	if len(p) > MaxPathLen {
+	if len(p) > MaxPathLen || strings.ContainsRune(p, 0) {
 		return "", ErrInvalidPath
 	}
 	switch {
