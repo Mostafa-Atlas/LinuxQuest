@@ -1,0 +1,16 @@
+# local data and secrets
+/data/
+.env
+*.pem
+ssh_host_*
+
+# build output
+/bin/
+/linuxquest
+*.test
+*.out
+
+# editor / OS
+.idea/
+.vscode/
+.DS_Store
