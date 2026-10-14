@@ -70,7 +70,7 @@ func Parse(line string) ([]string, error) {
 		case r == '\'' || r == '"':
 			quote = r
 			inWord = true
-		case strings.ContainsRune(";&|<>`", r):
+		case strings.ContainsRune(";&|<>", r):
 			return nil, ErrShellSyntax
 		case unicode.IsSpace(r):
 			flush()
