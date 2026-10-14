@@ -1,0 +1,20 @@
+{
+  "id": "shredder",
+  "order": 19,
+  "title": "Shredder",
+  "difficulty": "Intermediate",
+  "xp": 75,
+  "story": "The junk drawer has to go: two files and the drawer itself. rm -r removes a room and everything in it. Shred it, plant a clean flag file, and look at the result.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/junk/old1.txt": "Clutter.",
+    "/home/player/junk/old2.txt": "More clutter.",
+    "/home/player/keep.txt": "The one thing worth keeping."
+  },
+  "objectives": [
+    {"id": "rm_junk", "text": "Remove junk with rm -r", "kind": "removed", "path": "/home/player/junk", "success": "Drawer and contents gone.", "hints": ["Try: rm -r junk", "A full room needs -r."]},
+    {"id": "plant_flag", "text": "Make clean.txt", "kind": "created", "path": "/home/player/clean.txt", "requires": ["rm_junk"], "success": "Flag planted.", "hints": ["Try: touch clean.txt", "Mark the fresh start."]},
+    {"id": "ls_home", "text": "List clean home", "kind": "listed", "path": "/home/player", "requires": ["plant_flag"], "success": "Only keep.txt and clean.txt left.", "hints": ["Try: ls", "Confirm junk is gone and keep.txt stayed."]}
+  ]
+}

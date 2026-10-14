@@ -1,0 +1,19 @@
+{
+  "id": "find-it",
+  "order": 11,
+  "title": "Find It",
+  "difficulty": "Intermediate",
+  "xp": 75,
+  "story": "A treasure map sits three rooms deep and nobody remembers where. find searches the whole tree by name in one step.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/cellar/boxes/crates/treasure-map.txt": "X marks the spot. The spot is everywhere you look.",
+    "/home/player/cellar/boxes/old-shoes.txt": "Not treasure.",
+    "/home/player/cellar/jar.txt": "Pickled nothing."
+  },
+  "objectives": [
+    {"id": "find_map", "text": "Find map with find", "kind": "found", "path": "/home/player/cellar/boxes/crates/treasure-map.txt", "success": "Three rooms deep, one step.", "hints": ["Try: find . -name treasure-map.txt", "find searches downward from the room you give it."]},
+    {"id": "read_map", "text": "Read the map", "kind": "read", "path": "/home/player/cellar/boxes/crates/treasure-map.txt", "requires": ["find_map"], "success": "X found.", "hints": ["Try: cat cellar/boxes/crates/treasure-map.txt", "Read the path find reported."]}
+  ]
+}

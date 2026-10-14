@@ -1,0 +1,18 @@
+{
+  "id": "town-crier",
+  "order": 20,
+  "title": "Town Crier",
+  "difficulty": "Intermediate",
+  "xp": 75,
+  "story": "Last drill before the trials: announce the all-clear with echo, pin a notice file, and read your orders.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/orders.txt": "You now search, shape, and clean. The trials ahead are unscripted. Good luck."
+  },
+  "objectives": [
+    {"id": "cry", "text": "Echo the all-clear", "kind": "ran", "command": "echo", "success": "Announced.", "hints": ["Try: echo all clear", "Anything after echo gets printed."]},
+    {"id": "pin_note", "text": "Make notice.txt", "kind": "created", "path": "/home/player/notice.txt", "requires": ["cry"], "success": "Pinned.", "hints": ["Try: touch notice.txt", "Leave a marker that you were here."]},
+    {"id": "read_orders", "text": "Read orders.txt", "kind": "read", "path": "/home/player/orders.txt", "requires": ["pin_note"], "success": "Trials next.", "hints": ["Try: cat orders.txt", "Your next steps are in writing."]}
+  ]
+}

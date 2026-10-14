@@ -1,0 +1,19 @@
+{
+  "id": "far-and-wide",
+  "order": 13,
+  "title": "Far and Wide",
+  "difficulty": "Intermediate",
+  "xp": 75,
+  "story": "You're shelving books two rooms down when you need the manual from upstairs. Search upward with .. and read across rooms without walking.",
+  "home": "/home/player",
+  "start_dir": "/home/player/lib/shelf",
+  "files": {
+    "/home/player/lib/shelf/desk.txt": "A desk buried in novels.",
+    "/home/player/lib/manual.txt": "Shelving manual, chapter one: the stairs go both ways."
+  },
+  "objectives": [
+    {"id": "find_up", "text": "Find manual.txt upstairs", "kind": "found", "path": "/home/player/lib/manual.txt", "success": "Searched upstairs from downstairs.", "hints": ["Try: find .. -name manual.txt", ".. means the room above. find works from anywhere."]},
+    {"id": "read_up", "text": "Read manual.txt", "kind": "read", "path": "/home/player/lib/manual.txt", "requires": ["find_up"], "success": "Chapter one done.", "hints": ["Try: cat ../manual.txt", "Paths work in every command."]},
+    {"id": "ls_lib", "text": "List library with ls", "kind": "listed", "path": "/home/player/lib", "requires": ["read_up"], "success": "Two rooms, one view.", "hints": ["Try: ls ..", "ls takes another room's path too."]}
+  ]
+}

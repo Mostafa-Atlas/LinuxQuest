@@ -1,0 +1,21 @@
+{
+  "id": "sorting-hat",
+  "order": 17,
+  "title": "Sorting Hat",
+  "difficulty": "Intermediate",
+  "xp": 75,
+  "story": "Three loose pages, no folders. Build a docs room and file two pages into it with mv.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/mess/a.txt": "Page A: important.",
+    "/home/player/mess/b.txt": "Page B: also important.",
+    "/home/player/mess/c.txt": "Page C: stays where it is."
+  },
+  "objectives": [
+    {"id": "mk_docs", "text": "Make docs with mkdir", "kind": "created", "path": "/home/player/docs", "success": "Shelves up.", "hints": ["Try: mkdir docs", "Build the room before filing into it."]},
+    {"id": "mv_a", "text": "Move page A to docs", "kind": "created", "path": "/home/player/docs/a.txt", "requires": ["mk_docs"], "success": "Page A filed.", "hints": ["Try: mv mess/a.txt docs/a.txt", "mv relocates; the old copy disappears."]},
+    {"id": "mv_b", "text": "Move page B to docs", "kind": "created", "path": "/home/player/docs/b.txt", "requires": ["mv_a"], "success": "Page B filed.", "hints": ["Try: mv mess/b.txt docs/", "A room as destination keeps the name."]},
+    {"id": "ls_docs", "text": "List docs", "kind": "listed", "path": "/home/player/docs", "requires": ["mv_b"], "success": "Two filed.", "hints": ["Try: ls docs", "Check what you built."]}
+  ]
+}

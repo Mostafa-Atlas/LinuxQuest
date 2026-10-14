@@ -1,0 +1,20 @@
+{
+  "id": "what-type",
+  "order": 12,
+  "title": "What Type",
+  "difficulty": "Intermediate",
+  "xp": 75,
+  "story": "The storage room mixes boxes and papers. find -type filters by kind: f for files, d for directories.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/storage/invoices.txt": "Paperwork, as usual.",
+    "/home/player/storage/photos.txt": "Not actually photos.",
+    "/home/player/storage/archives/1999.txt": "Ancient history."
+  },
+  "objectives": [
+    {"id": "find_dir", "text": "Find archives by type", "kind": "found", "path": "/home/player/storage/archives", "success": "One directory.", "hints": ["Try: find . -type d -name archives", "-type d keeps directories only."]},
+    {"id": "find_file", "text": "Find 1999.txt by type", "kind": "found", "path": "/home/player/storage/archives/1999.txt", "requires": ["find_dir"], "success": "One file.", "hints": ["Try: find . -type f -name 1999.txt", "Same search, files only."]},
+    {"id": "read_old", "text": "Read 1999.txt", "kind": "read", "path": "/home/player/storage/archives/1999.txt", "requires": ["find_file"], "success": "Read.", "hints": ["Try: cat storage/archives/1999.txt", "Read what you located."]}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "word-search",
+  "order": 14,
+  "title": "Word Search",
+  "difficulty": "Intermediate",
+  "xp": 75,
+  "story": "The night log is five lines and one of them matters: the one with MIDNIGHT. grep prints only lines holding your word.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/night-log.txt": "20:00 rounds complete.\n21:30 all quiet.\n23:59 MIDNIGHT RAVEN sighted by the gate.\n00:30 false alarm, probably a cat.\n01:00 shift over."
+  },
+  "objectives": [
+    {"id": "grep_mid", "text": "Grep MIDNIGHT from log", "kind": "grepped", "path": "/home/player/night-log.txt", "success": "One line out of five.", "hints": ["Try: grep MIDNIGHT night-log.txt", "grep prints lines holding your pattern."]},
+    {"id": "read_log", "text": "Read night-log", "kind": "read", "path": "/home/player/night-log.txt", "requires": ["grep_mid"], "success": "Probably a cat.", "hints": ["Try: cat night-log.txt", "grep finds it; reading explains it."]},
+    {"id": "ls_home", "text": "List home", "kind": "listed", "path": "/home/player", "requires": ["read_log"], "success": "Done.", "hints": ["Try: ls", "Finish with a look around."]}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "quiet-please",
+  "order": 15,
+  "title": "Quiet, Please",
+  "difficulty": "Intermediate",
+  "xp": 75,
+  "story": "The incident report says Warning in one place and warning in another. grep -i ignores case.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/incident.txt": "Monday: routine.\nTuesday: WARNING light flickered.\nWednesday: someone wrote warning in lowercase to be difficult.\nThursday: all calm."
+  },
+  "objectives": [
+    {"id": "grep_warn", "text": "Grep warnings, any case", "kind": "grepped", "path": "/home/player/incident.txt", "success": "Both spellings caught.", "hints": ["Try: grep -i warning incident.txt", "-i makes the pattern case-blind."]},
+    {"id": "read_inc", "text": "Read incident.txt", "kind": "read", "path": "/home/player/incident.txt", "requires": ["grep_warn"], "success": "Thursday was calm.", "hints": ["Try: cat incident.txt", "Context still matters."]}
+  ]
+}

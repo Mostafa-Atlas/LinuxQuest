@@ -1,0 +1,23 @@
+{
+  "id": "everywhere",
+  "order": 16,
+  "title": "Everywhere at Once",
+  "difficulty": "Intermediate",
+  "xp": 75,
+  "story": "One of six drawers mentions the BLUE-LANTERN code. grep -r searches the whole tree in one command.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/archive/d1.txt": "Drawer one: paperclips.",
+    "/home/player/archive/d2.txt": "Drawer two: rubber bands.",
+    "/home/player/archive/d3.txt": "Drawer three: the BLUE-LANTERN code, finally.",
+    "/home/player/archive/d4.txt": "Drawer four: dust.",
+    "/home/player/archive/d5.txt": "Drawer five: more dust.",
+    "/home/player/archive/d6.txt": "Drawer six: a sandwich from 2019."
+  },
+  "objectives": [
+    {"id": "grep_code", "text": "Grep BLUE-LANTERN code", "kind": "grepped", "path": "/home/player/archive/d3.txt", "success": "Drawer three.", "hints": ["Try: grep -r BLUE-LANTERN archive", "-r descends into every room below."]},
+    {"id": "find_it", "text": "Find d3.txt by name", "kind": "found", "path": "/home/player/archive/d3.txt", "requires": ["grep_code"], "success": "Same answer, other tool.", "hints": ["Try: find archive -name d3.txt", "find locates by name what grep found by content."]},
+    {"id": "read_it", "text": "Read the drawer", "kind": "read", "path": "/home/player/archive/d3.txt", "requires": ["find_it"], "success": "Read.", "hints": ["Try: cat archive/d3.txt", "Finish by reading the evidence."]}
+  ]
+}
