@@ -37,3 +37,22 @@ touches the host filesystem.
 | `mv <src> <dst>` | Move or rename |
 | `echo <text>` | Print text (no redirection yet) |
 | `grep [-i] [-r] <pattern> [path...]` | Search file contents (`-r` descends into directories) |
+
+## Missions
+
+Missions are JSON files declaring the story, starting files, and objectives.
+Objectives are judged by what commands did, not by exact text. Supported kinds:
+
+| Kind | Completed when |
+|---|---|
+| `ran` | the named `command` ran successfully |
+| `listed` | the directory at `path` was listed |
+| `read` | the file at `path` was read with `cat` |
+| `entered` | `cd` succeeded and the working directory is now `path` |
+| `found` | `find` printed `path` as a match |
+| `created` | `path` was created by `mkdir`, `touch`, `cp`, or `mv` |
+| `removed` | `path` was removed by `rm` or moved away by `mv` |
+| `grepped` | `grep` printed a matching line from `path` |
+
+Use `requires` to make an objective wait for others, and `hints` for
+progressive hints (vague first, specific last).
