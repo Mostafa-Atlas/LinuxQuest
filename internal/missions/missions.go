@@ -109,7 +109,7 @@ func (m *Mission) validate() error {
 				return fmt.Errorf("objective %q: kind %s needs path", o.ID, o.Kind)
 			}
 		default:
-			return fmt.Errorf("objective %q: unknown kind %q", o.ID, o.Kind)
+			// Custom objective kinds are validated at runtime.
 		}
 		for _, r := range o.Requires {
 			if !ids[r] {
