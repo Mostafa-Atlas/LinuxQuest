@@ -1,0 +1,19 @@
+{
+  "id": "moving-day",
+  "order": 28,
+  "title": "Moving Day",
+  "difficulty": "Advanced",
+  "xp": 100,
+  "story": "The whole workshop relocates across the hall. Move the entire room with one mv, walk into the new address, and list it.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/workshop/hammer.txt": "Heavy.",
+    "/home/player/workshop/nails.txt": "Pointy, numerous."
+  },
+  "objectives": [
+    {"id": "relocate", "text": "Move workshop away", "kind": "created", "path": "/home/player/workshop-new", "success": "One trip, whole room.", "hints": ["Try: mv workshop workshop-new", "mv renames rooms as easily as files."]},
+    {"id": "enter_new", "text": "Enter the new room", "kind": "entered", "path": "/home/player/workshop-new", "requires": ["relocate"], "success": "New door, same tools.", "hints": ["Try: cd workshop-new", "The old address is gone."]},
+    {"id": "inventory", "text": "List moved tools", "kind": "listed", "path": "/home/player/workshop-new", "requires": ["enter_new"], "success": "Hammer and nails present.", "hints": ["Try: ls", "Check nothing fell off the truck."]}
+  ]
+}

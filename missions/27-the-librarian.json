@@ -1,0 +1,20 @@
+{
+  "id": "the-librarian",
+  "order": 27,
+  "title": "The Librarian",
+  "difficulty": "Advanced",
+  "xp": 100,
+  "story": "The librarian lost the folio. Find the poetry wing by type, grep it for raven in any case, read the folio.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/library/prose/essay.txt": "Long sentences about nothing.",
+    "/home/player/library/poetry/folio.txt": "Quoth the RAVEN of the north shelf.",
+    "/home/player/library/poetry/ode.txt": "An ode to overdue books."
+  },
+  "objectives": [
+    {"id": "wing", "text": "Find the poetry wing", "kind": "found", "path": "/home/player/library/poetry", "success": "Poetry wing found.", "hints": ["Try: find library -type d -name poetry", "Wings are directories."]},
+    {"id": "bird", "text": "Grep raven, any case", "kind": "grepped", "path": "/home/player/library/poetry/folio.txt", "requires": ["wing"], "success": "Found in the folio.", "hints": ["Try: grep -ri raven library/poetry", "Recursive and case-blind."]},
+    {"id": "folio", "text": "Read the folio", "kind": "read", "path": "/home/player/library/poetry/folio.txt", "requires": ["bird"], "success": "Read.", "hints": ["Try: cat library/poetry/folio.txt", "Finish by reading it."]}
+  ]
+}

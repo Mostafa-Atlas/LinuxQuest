@@ -1,0 +1,20 @@
+{
+  "id": "rebuild",
+  "order": 23,
+  "title": "Rebuild",
+  "difficulty": "Advanced",
+  "xp": 100,
+  "story": "Website files scattered in a drop folder, site skeleton gone. Rebuild it: make site and site/pages, then move both pages in, in order.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/drop/index.txt": "<h1>Home, eventually.</h1>",
+    "/home/player/drop/about.txt": "<h1>About, eventually.</h1>"
+  },
+  "objectives": [
+    {"id": "mk_site", "text": "Make site with mkdir", "kind": "created", "path": "/home/player/site", "success": "Outer room done.", "hints": ["Try: mkdir site", "Start outside, build inward."]},
+    {"id": "mk_pages", "text": "Make site/pages", "kind": "created", "path": "/home/player/site/pages", "requires": ["mk_site"], "success": "Inner room done.", "hints": ["Try: mkdir site/pages", "One room at a time."]},
+    {"id": "mv_index", "text": "Move index.txt to pages", "kind": "created", "path": "/home/player/site/pages/index.txt", "requires": ["mk_pages"], "success": "Homepage placed.", "hints": ["Try: mv drop/index.txt site/pages/index.txt", "Relocate it; the drop folder empties."]},
+    {"id": "mv_about", "text": "Move about.txt to pages", "kind": "created", "path": "/home/player/site/pages/about.txt", "requires": ["mv_index"], "success": "Site rebuilt.", "hints": ["Try: mv drop/about.txt site/pages/", "A room as destination keeps the name."]}
+  ]
+}

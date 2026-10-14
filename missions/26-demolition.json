@@ -1,0 +1,21 @@
+{
+  "id": "demolition",
+  "order": 26,
+  "title": "Demolition",
+  "difficulty": "Advanced",
+  "xp": 100,
+  "story": "Two condemned wings, one wrecking ball. Demolish both with rm -r, raise a tower file on the cleared ground, and list the result.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/condemned-a/rubble.txt": "Dust.",
+    "/home/player/condemned-b/rubble.txt": "More dust.",
+    "/home/player/landmark.txt": "This stays."
+  },
+  "objectives": [
+    {"id": "demo_a", "text": "Remove condemned-a", "kind": "removed", "path": "/home/player/condemned-a", "success": "First wing down.", "hints": ["Try: rm -r condemned-a", "Occupied rooms need -r."]},
+    {"id": "demo_b", "text": "Remove condemned-b", "kind": "removed", "path": "/home/player/condemned-b", "requires": ["demo_a"], "success": "Second wing down.", "hints": ["Try: rm -r condemned-b", "Same treatment."]},
+    {"id": "tower", "text": "Make tower.txt", "kind": "created", "path": "/home/player/tower.txt", "requires": ["demo_b"], "success": "Tower up.", "hints": ["Try: touch tower.txt", "Build on the rubble."]},
+    {"id": "skyline", "text": "List the skyline", "kind": "listed", "path": "/home/player", "requires": ["tower"], "success": "Landmark, tower, nothing else.", "hints": ["Try: ls", "Confirm what remains."]}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "two-of-each",
+  "order": 25,
+  "title": "Two of Each",
+  "difficulty": "Advanced",
+  "xp": 100,
+  "story": "The press office needs the statement in triplicate. Copy it twice under exact names, then read one copy to certify it.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/statement.txt": "We duplicate everything. Everything, we duplicate."
+  },
+  "objectives": [
+    {"id": "cp_one", "text": "Copy to statement-2.txt", "kind": "created", "path": "/home/player/statement-2.txt", "success": "Two copies.", "hints": ["Try: cp statement.txt statement-2.txt", "Exact names matter."]},
+    {"id": "cp_two", "text": "Copy to statement-3.txt", "kind": "created", "path": "/home/player/statement-3.txt", "requires": ["cp_one"], "success": "Three copies.", "hints": ["Try: cp statement.txt statement-3.txt", "Same source, new destination."]},
+    {"id": "certify", "text": "Read statement-3.txt", "kind": "read", "path": "/home/player/statement-3.txt", "requires": ["cp_two"], "success": "Identical.", "hints": ["Try: cat statement-3.txt", "Verify what you made."]}
+  ]
+}

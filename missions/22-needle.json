@@ -1,0 +1,23 @@
+{
+  "id": "needle",
+  "order": 22,
+  "title": "Needle",
+  "difficulty": "Advanced",
+  "xp": 100,
+  "story": "Six field reports, one coded phrase: NIGHT-HAWK, in unknown case. Sweep the tree case-blind, confirm the file by name, read it.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/reports/r1.txt": "Sector one: quiet.",
+    "/home/player/reports/r2.txt": "Sector two: a night-hawk silhouette, lowercase, at dusk.",
+    "/home/player/reports/r3.txt": "Sector three: quiet.",
+    "/home/player/reports/r4.txt": "Sector four: quiet.",
+    "/home/player/reports/r5.txt": "Sector five: quiet.",
+    "/home/player/reports/r6.txt": "Sector six: quiet."
+  },
+  "objectives": [
+    {"id": "grep_code", "text": "Grep code with grep -ri", "kind": "grepped", "path": "/home/player/reports/r2.txt", "success": "Sector two.", "hints": ["Try: grep -ri NIGHT-HAWK reports", "Recursive and case-blind."]},
+    {"id": "find_file", "text": "Find r2.txt by name", "kind": "found", "path": "/home/player/reports/r2.txt", "requires": ["grep_code"], "success": "Same file, other tool.", "hints": ["Try: find reports -name r2.txt", "A second tool should agree."]},
+    {"id": "read_file", "text": "Read the report", "kind": "read", "path": "/home/player/reports/r2.txt", "requires": ["find_file"], "success": "Dusk silhouette, logged.", "hints": ["Try: cat reports/r2.txt", "Close it by reading it."]}
+  ]
+}

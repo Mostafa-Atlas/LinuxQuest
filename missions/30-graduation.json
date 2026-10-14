@@ -1,0 +1,22 @@
+{
+  "id": "graduation",
+  "order": 30,
+  "title": "Graduation",
+  "difficulty": "Advanced",
+  "xp": 100,
+  "story": "Final exam, one operation in order: enter the depot, build a stage inside it, find the hidden diploma by name, confirm its honor code with grep, then demolish the scaffolding.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/depot/supplies.txt": "Supplies.",
+    "/home/player/depot/hidden/diploma.txt": "HONOR CODE: look, move, build, search, clean.",
+    "/home/player/scaffold/pole.txt": "Temporary."
+  },
+  "objectives": [
+    {"id": "enter_depot", "text": "Enter the depot", "kind": "entered", "path": "/home/player/depot", "success": "On site.", "hints": ["Try: cd depot", "Start where the work is."]},
+    {"id": "build_stage", "text": "Build a stage", "kind": "created", "path": "/home/player/depot/stage", "requires": ["enter_depot"], "success": "Stage up.", "hints": ["Try: mkdir stage", "Relative to where you stand."]},
+    {"id": "find_diploma", "text": "Find hidden diploma", "kind": "found", "path": "/home/player/depot/hidden/diploma.txt", "requires": ["build_stage"], "success": "Diploma located.", "hints": ["Try: find . -name diploma.txt", "Search from inside the depot."]},
+    {"id": "honor", "text": "Grep the HONOR CODE", "kind": "grepped", "path": "/home/player/depot/hidden/diploma.txt", "requires": ["find_diploma"], "success": "Code confirmed.", "hints": ["Try: grep HONOR hidden/diploma.txt", "Prove the words are there."]},
+    {"id": "clear_scaffold", "text": "Remove the scaffold", "kind": "removed", "path": "/home/player/scaffold", "requires": ["honor"], "success": "Site clean. Done.", "hints": ["Try: rm -r ~/scaffold", "~ paths work from anywhere."]}
+  ]
+}

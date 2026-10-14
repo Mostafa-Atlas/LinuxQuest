@@ -1,0 +1,21 @@
+{
+  "id": "inspection",
+  "order": 29,
+  "title": "Inspection",
+  "difficulty": "Advanced",
+  "xp": 100,
+  "story": "Health inspection day for the pantry: map the shelves by name, grep them for mold, read the offending log, list the pantry to sign off.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/pantry/top/log.txt": "Top shelf: spotless.",
+    "/home/player/pantry/middle/log.txt": "Middle shelf: a rumor of MOLD behind the jam.",
+    "/home/player/pantry/bottom/log.txt": "Bottom shelf: spotless."
+  },
+  "objectives": [
+    {"id": "shelves", "text": "Find the shelves", "kind": "found", "path": "/home/player/pantry/middle", "success": "Three shelves mapped.", "hints": ["Try: find pantry -type d", "Finding any shelf maps the pantry; middle is the one that matters."]},
+    {"id": "mold", "text": "Grep pantry for mold", "kind": "grepped", "path": "/home/player/pantry/middle/log.txt", "requires": ["shelves"], "success": "Middle shelf flagged.", "hints": ["Try: grep -ri mold pantry", "Case-blind across the whole pantry."]},
+    {"id": "read_log", "text": "Read the middle log", "kind": "read", "path": "/home/player/pantry/middle/log.txt", "requires": ["mold"], "success": "On the record.", "hints": ["Try: cat pantry/middle/log.txt", "Evidence in writing."]},
+    {"id": "sign_off", "text": "List pantry to sign off", "kind": "listed", "path": "/home/player/pantry", "requires": ["read_log"], "success": "Inspection done.", "hints": ["Try: ls pantry", "Final walkthrough."]}
+  ]
+}

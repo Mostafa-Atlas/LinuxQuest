@@ -1,0 +1,23 @@
+{
+  "id": "the-long-walk",
+  "order": 24,
+  "title": "The Long Walk",
+  "difficulty": "Advanced",
+  "xp": 100,
+  "story": "Four checkpoints down a tunnel, no shortcuts. Walk every room with cd, then surface.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/tunnel/a.txt": "Checkpoint one.",
+    "/home/player/tunnel/one/b.txt": "Checkpoint two.",
+    "/home/player/tunnel/one/two/c.txt": "Checkpoint three.",
+    "/home/player/tunnel/one/two/three/d.txt": "Bottom. Turn around."
+  },
+  "objectives": [
+    {"id": "w1", "text": "Enter the tunnel", "kind": "entered", "path": "/home/player/tunnel", "success": "Checkpoint one.", "hints": ["Try: cd tunnel", "One room per step."]},
+    {"id": "w2", "text": "Reach room one", "kind": "entered", "path": "/home/player/tunnel/one", "requires": ["w1"], "success": "Checkpoint two.", "hints": ["Try: cd one", "Relative to where you stand."]},
+    {"id": "w3", "text": "Reach room two", "kind": "entered", "path": "/home/player/tunnel/one/two", "requires": ["w2"], "success": "Checkpoint three.", "hints": ["Try: cd two", "Keep walking."]},
+    {"id": "w3b", "text": "Reach the bottom", "kind": "entered", "path": "/home/player/tunnel/one/two/three", "requires": ["w3"], "success": "Bottom touched.", "hints": ["Try: cd three", "Every room counts, no skipping."]},
+    {"id": "w4", "text": "Surface home", "kind": "entered", "path": "/home/player", "requires": ["w3b"], "success": "Whole tunnel walked.", "hints": ["Try: cd ~", "~ surfaces from anywhere."]}
+  ]
+}
