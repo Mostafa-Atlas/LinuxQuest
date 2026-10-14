@@ -70,3 +70,8 @@ Each objective shows when you finish it. Finish all of them to complete the
 mission. Stuck? Use `hint` first. Replaying a mission resets its files; XP is
 awarded only the first time you ever complete a mission, so replays cannot be
 farmed.
+
+## Progress
+
+XP, completed missions, commands, hints, and logins are recorded per account.
+Progress survives disconnects and restarts.
