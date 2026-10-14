@@ -1,0 +1,20 @@
+{
+  "id": "clean-up",
+  "order": 9,
+  "title": "Clean Up",
+  "difficulty": "Beginner",
+  "xp": 50,
+  "story": "Two scrap files clutter your desk. rm deletes, and it takes as many names as you give it. Remove both, then read the note that stays.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/scrap1.txt": "Yesterday's news.",
+    "/home/player/scrap2.txt": "Also yesterday's news.",
+    "/home/player/keep.txt": "This one stays."
+  },
+  "objectives": [
+    {"id": "rm_one", "text": "Delete scrap1.txt", "kind": "removed", "path": "/home/player/scrap1.txt", "success": "One gone.", "hints": ["Try: rm scrap1.txt", "rm deletes for good."]},
+    {"id": "rm_two", "text": "Delete scrap2.txt", "kind": "removed", "path": "/home/player/scrap2.txt", "success": "Both gone.", "hints": ["Try: rm scrap2.txt", "One command can delete both at once."]},
+    {"id": "read_keep", "text": "Read keep.txt", "kind": "read", "path": "/home/player/keep.txt", "requires": ["rm_one", "rm_two"], "success": "Right one kept.", "hints": ["Try: cat keep.txt", "Make sure keep.txt survived."]}
+  ]
+}

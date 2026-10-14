@@ -1,0 +1,18 @@
+{
+  "id": "loud-and-clear",
+  "order": 10,
+  "title": "Loud and Clear",
+  "difficulty": "Beginner",
+  "xp": 50,
+  "story": "Last drill of the basics: announce yourself with echo, look around home once more, and read your orders.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/memo.txt": "You can look, move, build, copy, rename, and delete. That covers the basics."
+  },
+  "objectives": [
+    {"id": "say_hi", "text": "Announce with echo", "kind": "ran", "command": "echo", "success": "Loud.", "hints": ["Try: echo hello world", "echo prints whatever follows it."]},
+    {"id": "ls_home", "text": "List home with ls", "kind": "listed", "path": "/home/player", "requires": ["say_hi"], "success": "Familiar ground.", "hints": ["Try: ls", "List the room you started in."]},
+    {"id": "read_memo", "text": "Read the memo", "kind": "read", "path": "/home/player/memo.txt", "requires": ["ls_home"], "success": "Basics done. Harder rooms ahead.", "hints": ["Try: cat memo.txt", "The memo is in your home directory."]}
+  ]
+}

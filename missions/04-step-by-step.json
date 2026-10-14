@@ -1,0 +1,19 @@
+{
+  "id": "step-by-step",
+  "order": 4,
+  "title": "Step by Step",
+  "difficulty": "Beginner",
+  "xp": 50,
+  "story": "Notes lead out of home and down a trail. Walk it one room at a time, then come back with cd ~.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/trail/one.txt": "First marker. Keep going: cd trail, then cd two.",
+    "/home/player/trail/two/deep.txt": "Bottom of the trail. Head home: cd ~"
+  },
+  "objectives": [
+    {"id": "enter_trail", "text": "Enter the trail", "kind": "entered", "path": "/home/player/trail", "success": "One room down.", "hints": ["Try: cd trail", "cd plus the room name."]},
+    {"id": "enter_two", "text": "Enter room two with cd", "kind": "entered", "path": "/home/player/trail/two", "requires": ["enter_trail"], "success": "Bottom reached.", "hints": ["Try: cd two", "From trail, two is right here."]},
+    {"id": "go_home", "text": "Return home with cd ~", "kind": "entered", "path": "/home/player", "requires": ["enter_two"], "success": "Back home.", "hints": ["Try: cd ~", "~ always means home."]}
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "missing-clue",
+  "order": 2,
+  "title": "Find the Missing Clue",
+  "difficulty": "Beginner",
+  "xp": 75,
+  "story": "An operator left a clue somewhere in the filesystem. Find it.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/notes.txt": "Reminder: the clue is not in the usual places.\nTry searching your whole home directory for a file named clue.\n",
+    "/home/player/documents/readme.txt": "This folder holds public documents.\nNothing secret here, but every investigation starts by looking around.\n",
+    "/home/player/secrets/clue.txt": "CLUE: the operator's codeword is BLUE-LANTERN.\n(A fictional, harmless message. Mission complete material.)\n"
+  },
+  "objectives": [
+    {
+      "id": "enter_documents",
+      "text": "Enter documents with cd",
+      "kind": "entered",
+      "path": "/home/player/documents",
+      "success": "Moved. Your prompt shows the new room.",
+      "hints": [
+        "cd changes directory. It needs a folder name.",
+        "ls shows a folder called documents.",
+        "Type cd documents."
+      ]
+    },
+    {
+      "id": "return_home",
+      "text": "Return home with cd ..",
+      "kind": "entered",
+      "path": "/home/player",
+      "requires": ["enter_documents"],
+      "success": ".. means the room above. You are home.",
+      "hints": [
+        "You are inside documents. .. always means one level up.",
+        "Type cd .. to climb out."
+      ]
+    },
+    {
+      "id": "find_clue",
+      "text": "Find clue.txt with find",
+      "kind": "found",
+      "path": "/home/player/secrets/clue.txt",
+      "success": "Found without opening every folder.",
+      "hints": [
+        "find searches by name so you don't have to browse.",
+        "It takes a starting room and a -name filter.",
+        "Try: find . -name clue.txt"
+      ]
+    },
+    {
+      "id": "read_clue",
+      "text": "Read the clue with cat",
+      "kind": "read",
+      "path": "/home/player/secrets/clue.txt",
+      "success": "Codeword recovered.",
+      "hints": [
+        "Print the file find pointed to.",
+        "Its path ends in secrets/clue.txt."
+      ]
+    }
+  ]
+}

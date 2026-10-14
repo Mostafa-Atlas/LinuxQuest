@@ -1,0 +1,18 @@
+{
+  "id": "make-room",
+  "order": 6,
+  "title": "Make Room",
+  "difficulty": "Beginner",
+  "xp": 50,
+  "story": "Your ideas need their own room. Build one with mkdir, put an empty file in it with touch, then list it.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/notes.txt": "Ideas deserve their own room."
+  },
+  "objectives": [
+    {"id": "mk_projects", "text": "Make projects with mkdir", "kind": "created", "path": "/home/player/projects", "success": "Room built.", "hints": ["Try: mkdir projects", "mkdir creates a room."]},
+    {"id": "touch_ideas", "text": "Make ideas.txt with touch", "kind": "created", "path": "/home/player/projects/ideas.txt", "requires": ["mk_projects"], "success": "Blank page ready.", "hints": ["Try: touch projects/ideas.txt", "touch makes an empty file."]},
+    {"id": "ls_projects", "text": "List projects with ls", "kind": "listed", "path": "/home/player/projects", "requires": ["touch_ideas"], "success": "One file inside.", "hints": ["Try: ls projects", "List the room you built."]}
+  ]
+}

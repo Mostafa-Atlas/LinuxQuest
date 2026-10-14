@@ -1,0 +1,52 @@
+{
+  "id": "welcome",
+  "order": 1,
+  "title": "Welcome to the Terminal",
+  "difficulty": "Beginner",
+  "xp": 50,
+  "story": "You're new here. Before anything else, learn where you are and how to look around.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/welcome.txt": "Welcome to LinuxQuest, operator.\nThis terminal is a safe simulation, so explore freely.\nTip: there is a missions/ folder next door. Keep it in mind.\n",
+    "/home/player/missions/first_clue.txt": "First clue: operators leave notes in plain text files.\nYou can read any file with cat. The trail starts here.\n"
+  },
+  "objectives": [
+    {
+      "id": "pwd",
+      "text": "Discover directory with pwd",
+      "kind": "ran",
+      "command": "pwd",
+      "success": "That printed /home/player. That is home.",
+      "hints": [
+        "The terminal always stands somewhere. One short command prints where.",
+        "Its name is short for print working directory: three letters.",
+        "Type pwd and press Enter."
+      ]
+    },
+    {
+      "id": "ls",
+      "text": "List home files with ls",
+      "kind": "listed",
+      "path": "/home/player",
+      "success": "Those are the files here. Names ending in / are folders.",
+      "hints": [
+        "One command lists what a directory holds.",
+        "Two letters, short for list.",
+        "Type ls and press Enter."
+      ]
+    },
+    {
+      "id": "cat_welcome",
+      "text": "Read welcome.txt with cat",
+      "kind": "read",
+      "path": "/home/player/welcome.txt",
+      "success": "Printed. That is all reading a file is.",
+      "hints": [
+        "cat prints a file to the screen.",
+        "Give it the file name: cat welcome.txt.",
+        "The file sits in your home directory."
+      ]
+    }
+  ]
+}

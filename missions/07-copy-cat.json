@@ -1,0 +1,18 @@
+{
+  "id": "copy-cat",
+  "order": 7,
+  "title": "Copy Cat",
+  "difficulty": "Beginner",
+  "xp": 50,
+  "story": "Keep two copies of the family recipe. Copy it with cp, then read the copy.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/recipe.txt": "Sugar, flour, patience."
+  },
+  "objectives": [
+    {"id": "cp_recipe", "text": "Copy the recipe", "kind": "created", "path": "/home/player/recipe-copy.txt", "success": "Two copies now.", "hints": ["Try: cp recipe.txt recipe-copy.txt", "cp needs a source and a destination."]},
+    {"id": "read_copy", "text": "Read the copy", "kind": "read", "path": "/home/player/recipe-copy.txt", "requires": ["cp_recipe"], "success": "Same text.", "hints": ["Try: cat recipe-copy.txt", "Read the file you just made."]},
+    {"id": "ls_home", "text": "List home with ls", "kind": "listed", "path": "/home/player", "requires": ["read_copy"], "success": "Both there.", "hints": ["Try: ls", "A bare ls lists the room you're in."]}
+  ]
+}

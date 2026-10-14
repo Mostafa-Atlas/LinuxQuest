@@ -1,0 +1,19 @@
+{
+  "id": "down-and-up",
+  "order": 5,
+  "title": "Down and Up",
+  "difficulty": "Beginner",
+  "xp": 50,
+  "story": "You start at the bottom of the trail. The .. shortcut climbs one room at a time. Check where you are, then climb out.",
+  "home": "/home/player",
+  "start_dir": "/home/player/trail/two",
+  "files": {
+    "/home/player/trail/one.txt": "Middle marker.",
+    "/home/player/trail/two/deep.txt": "Bottom marker. Climb with cd .."
+  },
+  "objectives": [
+    {"id": "where", "text": "Print directory with pwd", "kind": "ran", "command": "pwd", "success": "Bottom confirmed.", "hints": ["Try: pwd", "pwd prints the current room."]},
+    {"id": "climb_one", "text": "Climb up with cd ..", "kind": "entered", "path": "/home/player/trail", "requires": ["where"], "success": "Halfway out.", "hints": ["Try: cd ..", ".. means the room above."]},
+    {"id": "climb_out", "text": "Climb home with cd ..", "kind": "entered", "path": "/home/player", "requires": ["climb_one"], "success": "Out.", "hints": ["Try: cd .. once more", "From trail, one more climb reaches home."]}
+  ]
+}

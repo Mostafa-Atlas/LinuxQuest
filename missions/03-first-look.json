@@ -1,0 +1,20 @@
+{
+  "id": "first-look",
+  "order": 3,
+  "title": "First Look Around",
+  "difficulty": "Beginner",
+  "xp": 50,
+  "story": "Two rooms you haven't opened: the kitchen and the attic. List both, then read the guide on the table.",
+  "home": "/home/player",
+  "start_dir": "/home/player",
+  "files": {
+    "/home/player/guide.txt": "Look before you leap. ls before you cd.",
+    "/home/player/kitchen/snack.txt": "A slightly stale biscuit.",
+    "/home/player/attic/box.txt": "Dusty boxes. Nothing bites."
+  },
+  "objectives": [
+    {"id": "ls_kitchen", "text": "List the kitchen", "kind": "listed", "path": "/home/player/kitchen", "success": "One snack in there.", "hints": ["Try: ls kitchen", "ls takes the room name."]},
+    {"id": "ls_attic", "text": "List the attic", "kind": "listed", "path": "/home/player/attic", "success": "Boxes, all dusty.", "hints": ["Try: ls attic", "Same command, other room."]},
+    {"id": "read_guide", "text": "Read the guide", "kind": "read", "path": "/home/player/guide.txt", "success": "Two rules learned.", "hints": ["Try: cat guide.txt", "The guide is in your home directory."]}
+  ]
+}

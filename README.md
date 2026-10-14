@@ -56,3 +56,17 @@ Objectives are judged by what commands did, not by exact text. Supported kinds:
 
 Use `requires` to make an objective wait for others, and `hints` for
 progressive hints (vague first, specific last).
+
+## How to play
+
+Thirty missions in three tiers of ten: Beginner, Intermediate, Advanced. Start
+at the top: later missions assume earlier skills.
+
+1. Press Enter on the welcome screen.
+2. Choose a mission with the menu.
+3. Read the objectives, then type commands at the prompt.
+
+Each objective shows when you finish it. Finish all of them to complete the
+mission. Stuck? Use `hint` first. Replaying a mission resets its files; XP is
+awarded only the first time you ever complete a mission, so replays cannot be
+farmed.
