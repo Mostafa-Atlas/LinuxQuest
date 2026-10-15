@@ -75,3 +75,18 @@ farmed.
 
 XP, completed missions, commands, hints, and logins are recorded per account.
 Progress survives disconnects and restarts.
+
+## Built-in commands
+
+These are handled by the session, not the simulator:
+
+| Command | What it does |
+|---|---|
+| `help` | List supported commands |
+| `mission` | Show the current mission and which objectives are done |
+| `missions` | Go back to the mission menu |
+| `hint` | Next hint for your current objective. Repeat for more detail |
+| `stats` | Your lifetime stats (XP, missions, commands, hints, logins) |
+| `top` | XP leaderboard across all players |
+| `clear` | Clear the screen (also Ctrl+L) |
+| `exit` | End the session and show your summary (also Ctrl+D on an empty line) |
