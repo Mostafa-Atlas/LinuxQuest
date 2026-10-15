@@ -26,8 +26,11 @@ func (p *Progress) Complete(id string, xp int) (awarded int, first bool) {
 	defer p.mu.Unlock()
 	first = p.completed[id] == 0
 	p.completed[id]++
-	p.xp += xp
-	return xp, first
+	if first {
+		p.xp += xp
+		return xp, true
+	}
+	return 0, false
 }
 
 // XP returns total XP earned this session.
