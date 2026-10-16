@@ -112,3 +112,6 @@ account and your key is registered to it. Connect with:
 ```bash
 ssh -p 2222 -i ~/.ssh/id_ed25519 YOUR_NAME@YOUR_SERVER_IP
 ```
+
+New players can open `http://YOUR_SERVER_IP:8080` in a browser for step-by-step
+key setup, with this server's live fingerprint and port filled in.
