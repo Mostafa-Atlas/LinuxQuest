@@ -90,3 +90,9 @@ These are handled by the session, not the simulator:
 | `top` | XP leaderboard across all players |
 | `clear` | Clear the screen (also Ctrl+L) |
 | `exit` | End the session and show your summary (also Ctrl+D on an empty line) |
+
+## Accounts
+
+Accounts live in a SQLite database. The first connection for a username creates
+the account; afterwards one of its registered keys is required. Only public
+keys are stored. The very first account ever created is automatically an admin.
