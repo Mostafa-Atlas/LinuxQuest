@@ -102,3 +102,13 @@ keys are stored. The very first account ever created is automatically an admin.
 Up and Down recall history; Left, Right, Home, and End edit the line. Ctrl+C
 clears the current line (or quits when the line is empty). Tab completes the
 command or path you are typing. The interface follows your terminal size.
+
+## Connecting
+
+Login is by SSH key only: there are no passwords. Pick any username (letters,
+digits, `.` `_` `-`). The first time you connect, that username becomes your
+account and your key is registered to it. Connect with:
+
+```bash
+ssh -p 2222 -i ~/.ssh/id_ed25519 YOUR_NAME@YOUR_SERVER_IP
+```
