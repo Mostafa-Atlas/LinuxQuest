@@ -96,3 +96,9 @@ These are handled by the session, not the simulator:
 Accounts live in a SQLite database. The first connection for a username creates
 the account; afterwards one of its registered keys is required. Only public
 keys are stored. The very first account ever created is automatically an admin.
+
+## Terminal keys
+
+Up and Down recall history; Left, Right, Home, and End edit the line. Ctrl+C
+clears the current line (or quits when the line is empty). Tab completes the
+command or path you are typing. The interface follows your terminal size.
