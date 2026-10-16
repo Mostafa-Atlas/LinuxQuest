@@ -19,7 +19,7 @@ func NewStyles(r *lipgloss.Renderer) Styles {
 		Dim:      n().Foreground(lipgloss.Color("8")),
 		Accent:   n().Foreground(lipgloss.Color("6")),
 		Ok:       n().Foreground(lipgloss.Color("10")),
-		Err:      n().Foreground(lipgloss.Color("10")),
+		Err:      n().Foreground(lipgloss.Color("9")),
 		Hint:     n().Foreground(lipgloss.Color("11")),
 		Prompt:   n().Bold(true).Foreground(lipgloss.Color("10")),
 		Selected: n().Bold(true).Foreground(lipgloss.Color("14")),
