@@ -1,0 +1,52 @@
+# LinuxQuest - docker compose deployment.
+# Works from a fresh checkout with no edits: `docker compose up -d --build`.
+# Optional settings live in a `.env` file (copy .env.example).
+services:
+  linuxquest:
+    build: .
+    image: linuxquest:0.1
+    container_name: linuxquest
+    restart: unless-stopped
+    environment:
+      LINUXQUEST_HOST: "0.0.0.0"
+      LINUXQUEST_PORT: "${LINUXQUEST_PORT:-2222}"
+      LINUXQUEST_HOST_KEY: "/data/ssh_host_ed25519"
+      LINUXQUEST_MAX_SESSIONS: "${LINUXQUEST_MAX_SESSIONS:-100}"
+      LINUXQUEST_IDLE_TIMEOUT_MIN: "${LINUXQUEST_IDLE_TIMEOUT_MIN:-15}"
+      LINUXQUEST_MAX_SESSION_MIN: "${LINUXQUEST_MAX_SESSION_MIN:-120}"
+      LINUXQUEST_DB: "/data/linuxquest.db"
+      LINUXQUEST_ADMINS: "${LINUXQUEST_ADMINS:-}"
+      LINUXQUEST_WEB_PORT: "${LINUXQUEST_WEB_PORT:-8080}"
+    ports:
+      # SSH game port + help-page port. Set LINUXQUEST_BIND=127.0.0.1 to keep both private.
+      - "${LINUXQUEST_BIND:-0.0.0.0}:${LINUXQUEST_PORT:-2222}:${LINUXQUEST_PORT:-2222}"
+      # Login-help web page (key setup instructions with the live fingerprint).
+      - "${LINUXQUEST_BIND:-0.0.0.0}:${LINUXQUEST_WEB_PORT:-8080}:${LINUXQUEST_WEB_PORT:-8080}"
+    volumes:
+      # Named volume (not a host path): holds the generated SSH host key
+      # and the SQLite account database.
+      - linuxquest-data:/data
+    # Hardening: nothing here needs root, extra capabilities, or a writable image.
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/linuxquest", "-healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  linuxquest-data:
