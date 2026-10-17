@@ -115,3 +115,29 @@ ssh -p 2222 -i ~/.ssh/id_ed25519 YOUR_NAME@YOUR_SERVER_IP
 
 New players can open `http://YOUR_SERVER_IP:8080` in a browser for step-by-step
 key setup, with this server's live fingerprint and port filled in.
+
+## Configuration
+
+All settings are environment variables.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `LINUXQUEST_PORT` | `2222` | TCP port to listen on |
+| `LINUXQUEST_HOST` | `0.0.0.0` | Interface to listen on inside the process |
+| `LINUXQUEST_HOST_KEY` | `data/ssh_host_ed25519` | Host key path. Generated (Ed25519, mode 0600) if missing |
+| `LINUXQUEST_MAX_SESSIONS` | `100` | Concurrent sessions; extra players get a "server is full" message. `0` = unlimited |
+| `LINUXQUEST_IDLE_TIMEOUT_MIN` | `15` | Disconnect idle players after N minutes. `0` = never |
+| `LINUXQUEST_MAX_SESSION_MIN` | `120` | Hard cap on session length in minutes. `0` = none |
+| `LINUXQUEST_DB` | `data/linuxquest.db` | SQLite account database. Created automatically |
+| `LINUXQUEST_ADMINS` | *(empty)* | Comma-separated usernames granted admin |
+| `LINUXQUEST_WEB_PORT` | `8080` | Login-help web page. `0` disables it |
+
+## Testing
+
+```bash
+go test ./...
+go vet ./...
+```
+
+The suite covers path resolution, every simulated command, mission loading and
+objective tracking, and end-to-end play over a real SSH connection.
