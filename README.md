@@ -336,3 +336,15 @@ rejection, abrupt disconnects, session limit, host-key persistence).
 - No per-IP connection rate limiting inside the app (see firewall notes).
 - Anyone holding a key can self-register under a fresh username (by design, like a public game server). There is no per-IP rate limiting inside the app (see firewall notes).
 - The healthcheck's TCP probe may add an occasional handshake-EOF line to the logs.
+
+
+## Demp
+
+### Mission select
+![Mission list](Img/01-missions.png)
+
+### Playing a mission
+![Mission 1](Img/02-mission1.png)
+
+### Mission complete
+![Mission complete](Img/03-complete.png)
