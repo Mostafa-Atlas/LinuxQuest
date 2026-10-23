@@ -1,350 +1,249 @@
 # LinuxQuest
 
-LinuxQuest is a terminal game that teaches Linux commands. Players connect over
-SSH, pick a mission, and type commands into a **simulated** Linux shell. Nothing
-they type ever reaches the real server.
+A game that teaches Linux commands, played over SSH. You connect with a normal `ssh` command, pick a mission, and type commands into a fake shell. The shell is a simulator written in Go, so nothing you type ever touches the real server.
 
-It ships an SSH server, a virtual filesystem, a small command simulator, a
-data-driven mission engine, a Bubble Tea interface, and thirty playable
-missions in three tiers of ten. The first two:
+I started it as a two-mission MVP. It now has 30 missions in three tiers, accounts based on SSH keys, saved progress, a leaderboard, and a small web page that helps people set up their keys.
 
-| Mission | Difficulty | XP | You practise |
-|---|---|---|---|
-| 1. Welcome to the Terminal | Beginner | 50 | `pwd`, `ls`, `cat` |
-| 2. Find the Missing Clue | Beginner | 75 | `cd`, `cd ..`, `find`, `cat` |
+![Mission list](Img/01-missions.png)
 
-## Quick start (Docker)
 
-Requires Docker with the Compose plugin.
+## Try online (Demo)
+
+### 1. Make an SSH key (once per device)
+
+**macOS / Linux**
 
 ```bash
-docker compose up -d --build     # build and start
-docker compose logs -f linuxquest # view logs (Ctrl+C stops following)
-docker compose ps                 # shows "healthy" once the server answers
-docker compose down               # stop (the SSH host key volume is kept)
+ssh-keygen -t ed25519 -C "you@linuxquest"
+ssh -p 2222 -i ~/.ssh/id_ed25519 YOUR_NAME@16.16.82.170
 ```
+for Windows or Android visit this help page http://16.16.82.170:8080/
 
-Then, from any machine that can reach the server:
+## Try it (self-hosted)
+
+You need Docker with the Compose plugin.
 
 ```bash
-ssh -p 2222 YOUR_NAME@YOUR_SERVER_IP
+docker compose up -d --build
+docker compose ps      # wait for "healthy"
+docker compose logs -f linuxquest
 ```
 
-Login is by **SSH key only — there are no passwords**. If you do not have a
-key yet, make one (once per device):
-
-```bash
-ssh-keygen -t ed25519 -C "you@linuxquest"   # press Enter three times
-```
-
-then connect with it:
+Then connect from any machine that can reach the server:
 
 ```bash
 ssh -p 2222 -i ~/.ssh/id_ed25519 YOUR_NAME@YOUR_SERVER_IP
 ```
 
-Pick any username (letters, digits, `.` `_` `-`). The **first** time you
-connect, that username becomes your account and your key is registered to it.
-The very first account ever created is automatically an admin.
-The first time you connect, OpenSSH also shows the server's host-key
-fingerprint and asks you to trust it — compare it with the fingerprint on the
-help page below. That is normal.
-
-> **New here?** Open `http://YOUR_SERVER_IP:8080` in a browser: step-by-step
-> key setup for Windows, macOS, Linux, and Android, with this server's live
-> fingerprint and port filled in.
-
-To change the port or other settings, copy `.env.example` to `.env` and edit it
-(no source changes are required). `docker compose down -v` also deletes the host
-key volume, so players would then see a "host key changed" warning.
-
-## Run locally without Docker
-
-Requires Go 1.22 or newer.
+There are no passwords, only SSH keys. If you don't have a key yet:
 
 ```bash
-make deps    # runs `go mod tidy`; creates go.sum on first use (commit it)
-make test    # go test ./...
-make run     # starts on 0.0.0.0:2222 (override with LINUXQUEST_PORT / LINUXQUEST_HOST)
+ssh-keygen -t ed25519 -C "you@linuxquest"
 ```
 
-In another terminal (after `ssh-keygen -t ed25519` if you have no key yet):
-`ssh -p 2222 -i ~/.ssh/id_ed25519 you@localhost`. The host key is created at
-`data/ssh_host_ed25519` and accounts at `data/linuxquest.db` on first start.
-The help page runs at `http://localhost:8080` (`LINUXQUEST_WEB_PORT`; `0` disables it).
+Pick any username (letters, digits, `.`, `_`, `-`, up to 32 characters). The first time you connect, that username becomes your account and your key is tied to it. After that, you need a registered key to get back in.
 
-> **go.sum:** the repository ships `go.mod` without a `go.sum`. The first
-> `make deps` (or `go mod tidy`) downloads the dependencies and writes it. Commit
-> the generated `go.sum` so later builds are checksum-verified.
+Your SSH client will also ask you to trust the server's host key the first time. That's normal. You can compare the fingerprint with the one on the help page at `http://YOUR_SERVER_IP:8080`, which also has key setup steps for Windows, macOS, Linux, and Android.
 
-## Configuration
+To change ports or limits, copy `.env.example` to `.env` and edit it. No code changes needed.
 
-All settings are environment variables.
+### Without Docker
 
-| Variable | Default | Meaning |
-|---|---|---|
-| `LINUXQUEST_PORT` | `2222` | TCP port to listen on (Compose publishes the same port on the host) |
-| `LINUXQUEST_HOST` | `0.0.0.0` | Interface to listen on inside the process |
-| `LINUXQUEST_HOST_KEY` | `data/ssh_host_ed25519` (`/data/ssh_host_ed25519` in Docker) | Host key path. Generated (Ed25519, mode 0600) if missing |
-| `LINUXQUEST_MAX_SESSIONS` | `100` | Concurrent sessions; extra players get a "server is full" message. `0` = unlimited |
-| `LINUXQUEST_IDLE_TIMEOUT_MIN` | `15` | Disconnect idle players after N minutes. `0` = never |
-| `LINUXQUEST_MAX_SESSION_MIN` | `120` | Hard cap on session length in minutes. `0` = none |
-| `LINUXQUEST_DB` | `data/linuxquest.db` (`/data/linuxquest.db` in Docker) | SQLite account database (users, progress, stats). Created automatically |
-| `LINUXQUEST_ADMINS` | *(empty)* | Comma-separated usernames granted admin (e.g. `LINUXQUEST_ADMINS=teacher,ops`). The first registered account is admin either way |
-| `LINUXQUEST_WEB_PORT` | `8080` | Login-help web page (key setup guide with the live fingerprint). `0` disables it |
-| `LINUXQUEST_BIND` | `0.0.0.0` | Compose only: host interface to publish on (`127.0.0.1` keeps it private) |
+You need Go 1.22 or newer.
 
-The host key and the account database live in the `linuxquest-data` Docker
-volume, so both survive container restarts and rebuilds. To use your own key,
-place it at the `LINUXQUEST_HOST_KEY` path before starting.
+```bash
+make test
+make run
+```
+
+Then `ssh -p 2222 -i ~/.ssh/id_ed25519 you@localhost`. The host key is created at `data/ssh_host_ed25519` and the database at `data/linuxquest.db` on first start. The help page is at `http://localhost:8080`.
 
 ## How to play
 
-Thirty missions in three tiers of ten — Beginner (50 XP), Intermediate
-(75 XP), Advanced (100 XP) — from `pwd` to multi-step investigations where
-you build, search, and clean up. Number keys jump to the first nine missions;
-the menu scrolls for the rest.
+1. Press Enter on the welcome screen.
+2. Pick a mission with the arrow keys, or press a number for the first nine. Start at the top, because later missions assume you learned the earlier stuff.
+3. Read the objectives and type commands at the prompt.
 
-1. Press **Enter** on the welcome screen.
-2. Choose a mission with **↑/↓ + Enter**, or press a number for the first nine.
-   Start at the top: later missions assume earlier skills.
-3. Read the objectives, then type commands at the prompt.
+Each time you finish an objective, the game tells you. When all of them are done you get a completion screen: Enter or `m` goes back to the menu, `r` replays the mission, `q` quits.
 
-Each objective shows `[ok] Objective complete` when you finish it. Finish all of
-them to see the completion screen, where **Enter/m** returns to the menu,
-**r** replays the mission, and **q** quits.
+![Playing a mission](Img/02-mission1.png)
+
+The missions come in three tiers of ten:
+
+| Tier | Missions | XP each | What you practice |
+|---|---|---|---|
+| Beginner | 1 to 10 | 50 (mission 2 gives 75) | `pwd`, `ls`, `cd`, `cat`, `mkdir`, `touch`, `cp`, `mv`, `rm`, `echo` |
+| Intermediate | 11 to 20 | 75 | `find`, `grep`, and working across directories |
+| Advanced | 21 to 30 | 100 | Multi-step jobs where you search, build, and clean up |
+
+A few things worth knowing:
+
+- Objectives check what your commands did, not what you typed. In mission 2, `cat secrets/clue.txt`, `cat ~/secrets/clue.txt`, and `cd secrets` followed by `cat clue.txt` all count.
+- If you're stuck, type `hint`. Repeat it for more detail. Looking things up online is fine too.
+- Replaying a mission resets its files. XP is only awarded the first time you finish a mission, so replaying can't be farmed.
+- Progress is saved to your account, so you can disconnect and come back.
+
+### Commands
 
 | Command | What it does |
 |---|---|
-| `help` | List supported commands |
+| `help` | List the supported commands |
 | `mission` | Show the current mission and which objectives are done |
-| `missions` | Go back to the mission menu |
-| `hint` | Next hint for your current objective. Repeat for more detail |
+| `missions` | Back to the mission menu |
+| `hint` | Next hint for the current objective |
+| `stats` | Your XP, missions, commands, hints, and logins |
+| `top` | XP leaderboard |
 | `keys` | List your registered SSH keys |
-| `keyadd <key>` | Register another key (second device): paste its `.pub` line |
-| `keyrm <fingerprint>` | Remove one of your keys (never the last one) |
-| `stats` | Your lifetime stats (XP, missions, commands, hints, logins) |
-| `top` | XP leaderboard across all players |
-| `admin` | Admin console (admin accounts only): totals, plus `users`, `inspect <name>`, `reset <name>`, `ban`/`unban <name>`, `promote`/`demote <name>` |
-| `clear` | Clear the screen (also **Ctrl+L**) |
-| `exit` | End the session and show your summary (also **Ctrl+D** on an empty line) |
+| `keyadd <key>` | Add another key (paste the `.pub` line), handy for a second device |
+| `keyrm <fingerprint>` | Remove a key. You can't remove your last one |
+| `admin` | Admin console, admins only |
+| `clear` | Clear the screen (or Ctrl+L) |
+| `exit` | End the session and show a summary (or Ctrl+D on an empty line) |
 | `pwd` | Print the current directory |
-| `ls [path]` | List a directory (folders end in `/`) |
-| `cd [path]` | Change directory. `cd ..` goes up, `cd` or `cd ~` goes home |
+| `ls [path]` | List a directory. Folders end in `/` |
+| `cd [path]` | Change directory. `cd ..` goes up, plain `cd` or `cd ~` goes home |
 | `cat <file>...` | Print files |
-| `find [path] -name <pattern> [-type f\|d]` | Search by name; `*` and `?` work inside quotes or not |
-| `mkdir <dir>` | Create a directory (parents included, like `mkdir -p`) |
-| `touch <file>` | Create an empty file |
-| `rm [-r] [-f] <path>...` | Delete (`-r` for directories, `-f` ignores missing files) |
-| `cp [-r] <src> <dst>` | Copy (`-r` for directories) |
+| `find [path] -name <pattern> [-type f\|d]` | Search by name. `*` and `?` work |
+| `mkdir <dir>` | Make a directory (parents included, like `mkdir -p`) |
+| `touch <file>` | Make an empty file |
+| `rm [-r] [-f] <path>...` | Delete things |
+| `cp [-r] <src> <dst>` | Copy |
 | `mv <src> <dst>` | Move or rename |
-| `echo <text>` | Print text (no redirection yet) |
-| `grep [-i] [-r] <pattern> [path...]` | Search file contents (`-r` descends into directories) |
+| `echo <text>` | Print text. No redirection yet |
+| `grep [-i] [-r] <pattern> [path...]` | Search inside files |
 
-Keys: **↑/↓** recall history, **←/→/Home/End** edit the line, **Ctrl+C** clears
-the current line (or quits when the line is empty). **Tab** completes the
-command or path you are typing (directories earn a `/`); with several matches
-it extends the shared part, or lists them on a second press.
+Up and down arrows recall history, Tab completes commands and paths, and Ctrl+C clears the line (or quits if the line is already empty). The interface follows your terminal size, and about 80x24 works fine.
 
-The interface follows your terminal size: the mission menu scrolls (ready for
-dozens of missions), boxes shrink to fit narrow windows, and long input such
-as a pasted key scrolls horizontally with markers so the cursor never
-gets lost.
+## Configuration
 
-Rules worth knowing:
+Everything is an environment variable.
 
-- Objectives are judged by what your commands *did*, not by exact text. For
-  example `cat secrets/clue.txt`, `cat ~/secrets/clue.txt`, and
-  `cd secrets` then `cat clue.txt` all read the clue.
-- Stuck? Use `hint` first. Looking up Linux commands online is allowed too:
-  reading docs is part of the job.
-- In mission 2, "go back home" only counts after you have entered `documents`.
-- Replaying a mission resets its files and directory. **XP is awarded only the
-  first time** you ever complete a mission, across all sessions, so replays
-  cannot be farmed.
-- Progress is saved to your account: XP, completed missions, commands, hints,
-  and logins survive disconnects and restarts. Type `stats` any time to see
-  your totals.
+| Variable | Default | What it does |
+|---|---|---|
+| `LINUXQUEST_PORT` | `2222` | SSH port. Compose publishes the same port on the host |
+| `LINUXQUEST_HOST` | `0.0.0.0` | Interface the process listens on |
+| `LINUXQUEST_HOST_KEY` | `data/ssh_host_ed25519` | Host key path. Generated if it's missing |
+| `LINUXQUEST_DB` | `data/linuxquest.db` | SQLite database for accounts and progress |
+| `LINUXQUEST_MAX_SESSIONS` | `100` | Concurrent sessions allowed. `0` means no limit |
+| `LINUXQUEST_IDLE_TIMEOUT_MIN` | `15` | Disconnect idle players. `0` means never |
+| `LINUXQUEST_MAX_SESSION_MIN` | `120` | Longest a session can run. `0` means no cap |
+| `LINUXQUEST_ADMINS` | empty | Comma-separated usernames that get admin, like `teacher,ops` |
+| `LINUXQUEST_WEB_PORT` | `8080` | Port for the help page. `0` turns it off |
+| `LINUXQUEST_BIND` | `0.0.0.0` | Compose only. Use `127.0.0.1` to keep both ports private |
+
+In Docker the host key and the database both live in the `linuxquest-data` volume, so they survive restarts and rebuilds. If you want to use your own host key, put it at the `LINUXQUEST_HOST_KEY` path before the first start.
+
+## Security
+
+The short version: players never get a real shell.
+
+- **No real shell.** Input is split into words and run by a Go simulator over an in-memory filesystem. The code never calls `os/exec` and never reads the host filesystem on a player's behalf.
+- **Safe paths.** Paths are resolved against a virtual root, so `..` at `/` stays at `/`. NUL bytes and very long paths are rejected.
+- **No shell syntax.** Unquoted `; & | < >` and backticks are rejected, not interpreted. There's no variable expansion or substitution, and control characters are stripped from input.
+- **Interactive terminals only.** Connections without a PTY, like `ssh host somecommand`, are refused. No port forwarding, no SFTP.
+- **Keys only.** The server stores public keys and nothing else, so there's no password to guess or leak. Failed logins don't say whether the username or the key was wrong.
+- **Admins.** The first account ever created becomes an admin, and `LINUXQUEST_ADMINS` can add more. Admins can list, inspect, reset, ban, and promote players from inside the game. Bans and role changes hit online players immediately. You can't ban or demote yourself.
+- **Container.** Multi-stage build, distroless image with no shell, non-root (UID 65532), read-only root filesystem, all capabilities dropped, `no-new-privileges`, and memory and process limits. The only mount is the named data volume.
+- **Logging.** The server logs connects and disconnects, never keystrokes or commands.
+- **Limits.** Max sessions, idle timeout, max session length, 256-character input lines, and bounded scrollback and history.
+
+**Heads up if the server is public:** the first person to register becomes admin, so connect with your own account first, and set `LINUXQUEST_ADMINS`. Anyone with a key can also create an account, by design. If you want a private server, restrict access at the network level.
+
+### Running it on a VPS
+
+- **Keep your admin SSH on port 22** and leave LinuxQuest on 2222. If you want players on 22, move your own sshd first and make sure you can still log in, or you'll lock yourself out.
+- **Open only the game port**, for example `sudo ufw allow 2222/tcp`. Cloud providers often have a second firewall (a security group) that needs the same rule. Open 8080 too if you want the help page public.
+- **Rate-limit connections at the firewall.** The app caps concurrent sessions but doesn't limit new connections per IP. `ufw limit 2222/tcp` is a quick start, or use nftables or fail2ban.
+- **Docker can bypass UFW.** Docker edits iptables directly. Check from outside the machine that only the ports you meant to open are reachable.
+- **Private use.** Set `LINUXQUEST_BIND=127.0.0.1` and reach it over a VPN or an SSH tunnel.
+- **Back up the volume.** If the host key changes, every player gets a scary "host key changed" warning.
+
+## Adding a mission
+
+Copy any file in `missions/` and edit it. A mission file sets the story, the XP, the starting files, and a list of objectives. The loader checks every file at startup and refuses to run if one is malformed.
+
+Objective kinds:
+
+| Kind | Done when |
+|---|---|
+| `ran` | the named command ran successfully |
+| `listed` | the directory at `path` was listed |
+| `read` | the file at `path` was read with `cat` |
+| `entered` | `cd` worked and you're now in `path` |
+| `found` | `find` printed `path` as a match |
+| `created` | `path` was made by `mkdir`, `touch`, `cp`, or `mv` |
+| `removed` | `path` was removed by `rm` or moved away by `mv` |
+| `grepped` | `grep` printed a matching line from `path` |
+
+Use `requires` to make an objective wait for others, and `hints` for progressive hints (vague first, specific last).
+
+Adding a new *command* is a code change: write a function in `internal/simulator` that records what it did in `Result`.
 
 ## Project layout
 
 ```text
-cmd/linuxquest/        main: config, startup, graceful shutdown, -healthcheck probe
-internal/sshserver/    Wish SSH server, public-key auth + self-registration, per-connection sessions
+cmd/linuxquest/        startup, config, graceful shutdown, healthcheck probe
+internal/sshserver/    Wish SSH server, key auth and registration
 internal/terminal/     Bubble Tea UI: screens, input line, history, styling
-internal/session/      per-player game state: built-in commands, hints, XP, summary, stats/leaderboard/admin
-internal/simulator/    command parser + pwd/ls/cd/cat/find against the virtual FS
-internal/filesystem/   in-memory filesystem and safe path resolution
-internal/missions/     mission loader/validator and objective evaluation
-internal/progress/     session XP and completions (restored from storage at login)
-internal/store/        SQLite key accounts, mission progress, usage stats, leaderboard
-internal/webhelp/      login-help web page (key setup guide, live fingerprint)
+internal/session/      per-player state: built-in commands, hints, XP, stats, admin
+internal/simulator/    command parser and the pwd/ls/cd/cat/find/... commands
+internal/filesystem/   in-memory filesystem and path resolution
+internal/missions/     mission loader, validator, objective checks
+internal/progress/     session XP and completions
+internal/store/        SQLite: accounts, keys, progress, stats, leaderboard
+internal/webhelp/      the help web page
 missions/              mission definitions (embedded JSON)
 tests/                 end-to-end tests over a real SSH connection
 ```
 
-Responsibilities are separated so new commands and missions slot in without
-touching the SSH layer: the simulator knows nothing about missions, and
-missions only look at the *results* of commands.
-
-### Adding a mission
-
-Drop a new JSON file in `missions/` (copy an existing one). It declares the
-story, XP, starting files, and objectives. Supported objective kinds:
-
-| Kind | Completed when |
-|---|---|
-| `ran` | the named `command` ran successfully |
-| `listed` | the directory at `path` was listed |
-| `read` | the file at `path` was read with `cat` |
-| `entered` | `cd` succeeded and the working directory is now `path` |
-| `found` | `find` printed `path` as a match |
-| `created` | `path` was created by `mkdir`, `touch`, `cp`, or `mv` |
-| `removed` | `path` was removed by `rm` or moved away by `mv` |
-| `grepped` | `grep` printed a matching line from `path` |
-
-Use `requires` to make an objective wait for others, and `hints` for
-progressive hints (vague first, specific last). The loader rejects malformed
-missions at startup. Adding a *command* means a new function in
-`internal/simulator` that records its effects in `Result`.
-
-## Security model
-
-- **No real shell, ever.** Player input is parsed into words and run by a Go
-  simulator over an in-memory filesystem. The code never calls `os/exec`, never
-  invokes a shell, and never touches the host filesystem or environment for
-  player actions.
-- **Safe paths.** Every path is normalised lexically against a virtual root, so
-  `..` at `/` stays at `/`. NUL bytes and over-long paths are rejected.
-- **No shell syntax.** Unquoted `; & | < > \`` are rejected rather than
-  interpreted. There is no variable expansion, globbing, or substitution.
-  Control characters (such as terminal escape sequences) are stripped from input.
-- **Interactive terminals only.** Connections without a PTY (including
-  `ssh host command`) are refused. Port forwarding, SFTP, and other subsystems
-  are not enabled.
-- **SSH keys only, no passwords.** The first connection for a username
-  creates the account owning the presented key; afterwards one of its
-  registered keys is required. There is nothing to phish, brute-force, or
-  leak from the server: only public keys are stored. Usernames are limited to
-  1-32 safe characters, and rejected logins never say which half mismatched.
-  Keys are added/removed in-game with `keyadd`/`keyrm` (the last key cannot be
-  removed, so nobody locks themselves out). The first account ever created is
-  admin; further admins come from `LINUXQUEST_ADMINS`. Admins manage players from
-  inside the game (`admin users`, `admin inspect`, `admin reset`, `admin ban` /
-  `unban`, `admin promote` / `demote`); bans and role changes apply to online
-  players immediately, while a progress reset takes full effect on their next
-  login. You cannot ban or demote yourself. If you want a fully
-  private server, restrict access at the network level too.
-- **Container hardening.** Multi-stage build; final image is distroless with no
-  shell; runs as non-root (UID 65532); read-only root filesystem; all Linux
-  capabilities dropped; `no-new-privileges`; memory and process limits. No host
-  directories are mounted: only a named volume for the host key. Only the SSH
-  port is published.
-- **No secrets in the repo or image.** The host key is generated at first start
-  and stored in the volume. It is never logged.
-- **Logging.** The server logs connects and disconnects (address, terminal type,
-  client version, duration). It does **not** log keystrokes or commands.
-- **Resource limits.** Maximum concurrent sessions, idle timeout, maximum
-  session length, bounded input length (256 characters), and bounded scrollback
-  and history per session.
-
-### VPS deployment and firewall notes
-
-- **Port choice.** Your server's own admin SSH normally uses port 22. Keep
-  LinuxQuest on another port (default 2222) and leave admin SSH alone. If you
-  want players on port 22, move your admin sshd to a different port **first**
-  and confirm you can still log in, or you will lock yourself out.
-- **Open only that port**, for example with UFW:
-  ```bash
-  sudo ufw allow 2222/tcp
-  sudo ufw status
-  ```
-  Cloud providers often have a separate network firewall or security group that
-  also needs a rule for this port.
-- **Connection flooding.** The app caps concurrent sessions but does not rate-limit
-  new connections per IP. For a public server, add limits at the firewall
-  (for example `ufw limit 2222/tcp`, or nftables/iptables rate rules) and/or run
-  fail2ban-style tooling against the logs.
-- **Private use.** Set `LINUXQUEST_BIND=127.0.0.1` and reach it through a VPN or
-  an SSH tunnel instead of exposing it publicly.
-- **Docker and UFW.** Docker publishes ports by editing iptables directly, which
-  can bypass UFW rules. Check from outside the machine that only the ports you
-  intend are reachable, or bind to `127.0.0.1` and put a reverse proxy or
-  firewall rule in front.
-- **Keep the host key.** Back up the `linuxquest-data` volume if you do not want
-  players to see a changed-host-key warning after rebuilding the server.
+The simulator knows nothing about missions, and missions only look at what commands did. That's why you can add either without touching the SSH layer.
 
 ## Testing
 
 ```bash
-go test ./...          # or: make test
-go test -race ./...    # with the race detector (needs a C compiler)
+make test              # go test ./...
+go test -race ./...    # needs a C compiler
 go vet ./...
 ```
 
-The suite covers: path resolution and escape attempts, `pwd`/`ls`/`cd`/`cat`/`find`
-(including errors), unsupported commands and shell-syntax rejection, malformed
-input, mission loading and validation, objective tracking, alternative command
-sequences, completion and XP, replays, hints, session isolation, the Bubble Tea
-screens and input handling, and end-to-end play over a real SSH connection
-(both missions, simultaneous sessions, host-isolation, non-interactive
-rejection, abrupt disconnects, session limit, host-key persistence).
+The tests cover path escapes, every command and its error cases, shell-syntax rejection, mission loading and objective tracking, XP and replays, hints, session isolation, the UI, and full play-throughs over a real SSH connection (including simultaneous sessions, session limits, and host-key persistence).
 
-### Manual SSH test
+### A quick manual check
 
-1. Start the server (`docker compose up -d --build` or `make run`).
-2. Make a throwaway key (`ssh-keygen -t ed25519 -f /tmp/lq-test -N ""`) and connect: `ssh -p 2222 -i /tmp/lq-test tester@localhost`.
-   Confirm the welcome screen says the account was created.
-3. Press Enter, then `1`. Run `pwd`, `ls`, `cat welcome.txt`. Confirm each
-   objective is announced and the completion screen shows **+50 XP**.
-4. Press `m`, then `2`. Run `hint` (the hint must not give the answer away), then
-   `cd documents`, `cd ..`, `find . -name clue.txt`, `cat secrets/clue.txt`.
-   Confirm **+75 XP** and **Total XP: 125**.
-5. Try to break out: `cat /etc/passwd`, `cd ../../..`, `ls /`, `whoami`,
-   `ls; id`, `cat $(id)`. You should only see simulated errors, never real host data.
-6. Open a second terminal and connect with a *different* username. Confirm its directory and XP are
-   independent of the first session.
-7. Reconnect with the *first* username and password. Confirm XP and the
-   completed mission survived the disconnect (`stats` shows lifetime totals).
-8. Press `q` to see the session summary, then disconnect with any key.
-9. Restart the server and reconnect. The host-key fingerprint should be unchanged, and accounts still work.
+1. Start the server and make a throwaway key: `ssh-keygen -t ed25519 -f /tmp/lq-test -N ""`.
+2. Connect with `ssh -p 2222 -i /tmp/lq-test tester@localhost`. The welcome screen should say the account was created.
+3. Do mission 1 (`pwd`, `ls`, `cat welcome.txt`) and check you get +50 XP.
+4. Do mission 2. Run `hint` first and make sure it doesn't give the answer away. You should end on +75 XP and 125 total.
+5. Try to break out: `cat /etc/passwd`, `cd ../../..`, `ls /`, `whoami`, `ls; id`. You should only ever see simulated errors.
+6. Connect from a second terminal with a different username and key. Its files and XP should be separate.
+7. Reconnect as the first user and run `stats`. Your progress should still be there.
+8. Restart the server. The host key fingerprint shouldn't change.
 
 ## Troubleshooting
 
-| Symptom | Likely cause and fix |
+| What you see | Likely cause |
 |---|---|
-| `Connection refused` | Server not running (`docker compose ps`, `docker compose logs`), wrong port, or the firewall/security group blocks it |
-| `Connection timed out` | Firewall or cloud security group is dropping the port |
-| `REMOTE HOST IDENTIFICATION HAS CHANGED` | The host key changed (volume deleted or key replaced). Run `ssh-keygen -R "[HOST]:2222"` and reconnect |
-| `Requires an active PTY` | Non-interactive use such as `ssh host cmd`. Connect with plain `ssh -p 2222 YOU@HOST` |
-| `Permission denied (publickey)` | Wrong key for that username, or no key offered (`-i` flag missing). Usernames are 1-32 safe chars |
-| `LinuxQuest is full right now` | Hit `LINUXQUEST_MAX_SESSIONS`. Raise it or retry |
-| Garbled box characters or colours | Use a UTF-8-capable terminal with a font that includes box-drawing characters |
-| Layout looks cramped | Enlarge the window; the UI adapts to the terminal size (about 80x24 works well) |
-| Host key volume permission errors | Make sure the volume is writable by UID 65532. A fresh named volume works automatically |
-| `missing go.sum entry` | Run `go mod tidy` (or `make deps`) once |
-| Healthcheck "unhealthy" | `docker compose logs linuxquest`. The probe is `linuxquest -healthcheck`, a TCP connect that expects an `SSH-` banner on `LINUXQUEST_PORT` |
+| `Connection refused` | Server isn't running (`docker compose ps`), wrong port, or a firewall is blocking it |
+| `Connection timed out` | A firewall or cloud security group is dropping the port |
+| `REMOTE HOST IDENTIFICATION HAS CHANGED` | The host key changed. Run `ssh-keygen -R "[HOST]:2222"` and reconnect |
+| `Requires an active PTY` | You ran `ssh host command`. Use plain `ssh -p 2222 you@host` |
+| `Permission denied (publickey)` | Wrong key for that username, or you forgot `-i` |
+| `LinuxQuest is full right now` | You hit `LINUXQUEST_MAX_SESSIONS`. Raise it or try again |
+| Garbled boxes or colors | Use a UTF-8 terminal with a font that has box-drawing characters |
+| Host key permission errors | The volume has to be writable by UID 65532. A fresh named volume handles that |
+| Container shows "unhealthy" | Check `docker compose logs linuxquest`. The probe is a TCP connect that expects an `SSH-` banner |
 
 ## Known limitations
 
-- Progress is saved per account in SQLite, but there is no backup story beyond the Docker volume yet.
-- No password fallback: lose all your keys and the account is unrecoverable (admins cannot log in as you). Register a second key with `keyadd` while you still can.
-- Commands keep deliberately small option support (`ls` takes no flags, `find`
-  supports `-name` and `-type`). Pipes, redirects, globbing, and variables are
-  not supported, and deleting a mission file can only be undone by replaying
-  the mission.
-- No per-IP connection rate limiting inside the app (see firewall notes).
-- Anyone holding a key can self-register under a fresh username (by design, like a public game server). There is no per-IP rate limiting inside the app (see firewall notes).
-- The healthcheck's TCP probe may add an occasional handshake-EOF line to the logs.
+- There's no password fallback. If you lose every key, the account is gone and admins can't log in as you. Add a second key with `keyadd` while you still can.
+- Commands only support a few options on purpose. `ls` takes a path but no flags, and `find` only knows `-name` and `-type`.
+- No pipes, redirects, globbing, or variables yet.
+- No per-IP rate limiting in the app (see the VPS notes above).
+- Backups are just the Docker volume.
+- The healthcheck sometimes adds a handshake-EOF line to the logs. It's harmless.
 
+## Screenshot
 
-## Demp
+Finishing a mission:
 
-### Mission select
-![Mission list](Img/01-missions.png)
-
-### Playing a mission
-![Mission 1](Img/02-mission1.png)
-
-### Mission complete
 ![Mission complete](Img/03-complete.png)
